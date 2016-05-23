@@ -1,0 +1,11 @@
+library(methods)
+library("gplots")
+library("RColorBrewer")
+library("DESeq2")
+library("GenomicAlignments")
+
+sampleTable<-read.table("/Data05/mengge/MEL_RNAseq/data/MEL_SampleFile.txt", header=TRUE)
+bamFiles<-file.path(sampleTable$FileName)
+hse<-makeTxDbFromGFF("/Data05/mengge/MEL_PIPseq/annotation/refGene_filtered_mRNA.gtf", format="gtf")
+exonsByGene<-exonsBy(hse, by="gene")
+se<-summarizeOverlaps(exonsByGene, BamFileList(bamFiles, yieldSize=1000), mode="Union", singleEnd=FALSE, ignore.strand=FALSE, fragments=TRUE)
