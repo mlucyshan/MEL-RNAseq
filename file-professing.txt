@@ -1,0 +1,15 @@
+#To calculate the gene length#
+awk '{print $1"\tmm10_refgene\tgene\t"$2"\t"$3"\t.\t"$6"\t.\tID="$4"\tName="$4"\t"$3-$2}' /Data05/mengge/MEL_PIPseq/mm10_wholegene.bed > /Data05/mengge/MEL_PIPseq/mm10_geneLength.txt
+#Intersecting PPS with gene ID#
+grep "NM_" mm10_wholegene.bed > mm10_wholegene_NM.bed
+intersectBed -a 0days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 0days_merged.CSAR_PPS_FDR05.geneName.bed
+intersectBed -a 2days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 2days_merged.CSAR_PPS_FDR05.geneName.bed
+intersectBed -a 4days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 4days_merged.CSAR_PPS_FDR05.geneName.bed
+#To calculate read count average#
+CountDir<-"/Data05/mengge/MEL_RNAseq/data"
+counts<-matrix(0, nrow=26496-5, ncol=6)
+CountFiles<-list.files(path=countDir, pattern="mm10_mRNA_read_counts.txt")
+for (i in 1:length(CountFiles){
+    f<-CountFiles[i]
+    tmp<-raed.table(file=f, header=FALSE, nrow=26496-5)
+}
