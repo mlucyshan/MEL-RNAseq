@@ -5,11 +5,22 @@ grep "NM_" mm10_wholegene.bed > mm10_wholegene_NM.bed
 intersectBed -a 0days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 0days_merged.CSAR_PPS_FDR05.geneName.bed
 intersectBed -a 2days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 2days_merged.CSAR_PPS_FDR05.geneName.bed
 intersectBed -a 4days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 4days_merged.CSAR_PPS_FDR05.geneName.bed
-#To calculate read count average#
+#To calculate read count average --> done in R#
 CountDir<-"/Data05/mengge/MEL_RNAseq/data"
 counts<-matrix(0, nrow=26496-5, ncol=6)
 CountFiles<-list.files(path=countDir, pattern="mm10_mRNA_read_counts.txt")
-for (i in 1:length(CountFiles){
+for (i in 1:length(CountFiles)){
     f<-CountFiles[i]
-    tmp<-raed.table(file=f, header=FALSE, nrow=26496-5)
+    tmp<-read.table(file=f, header=FALSE, nrow=26496-5)
+    counts[,i]<-tmp$V2
 }
+counts<-data.frame(counts)
+rownames(counts)<-tmp$V1
+colnames(counts)<-c("day0_rep1", "day0_rep2", "day2_rep1", "day2_rep2", "day4_rep1", "day4_rep2")
+counts_avg<-as.data.frame(matrix(0, nrow=nrow(counts), ncol=3))
+rownames(counts_avg)<-rownames(counts)
+colnames(counts_avg)<-c("day0_mRNA_avg", "day2_mRNA_avg", "day4_mRNA_avg")
+counts_avg$day0_mRNA_avg<-(counts$day0_rep1+counts$day0_rep2)/2
+counts_avg$day2_mRNA_avg<-(counts$day2_rep1+counts$day2_rep2)/2
+counts_avg$day4_mRNA_avg<-(counts$day4_rep1+counts$day4_rep2)/2
+write.table(counts_avg, file="/Data05/mengge/MEL_RNAseq/data/MEL_mRNA_average.txt", quote=FALSE, sep="\t")
