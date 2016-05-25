@@ -1,5 +1,5 @@
 #To calculate the gene length#
-awk '{print $1"\tmm10_refgene\tgene\t"$2"\t"$3"\t.\t"$6"\t.\tID="$4"\tName="$4"\t"$3-$2}' /Data05/mengge/MEL_PIPseq/mm10_wholegene.bed > /Data05/mengge/MEL_PIPseq/mm10_geneLength.txt
+awk '{print $1"\tmm10_refgene\tgene\t"$2"\t"$3"\t.\t"$6"\t.\tID="$4";Name="$4"\t"$3-$2}' /Data05/mengge/MEL_PIPseq/mm10_wholegene.bed > /Data05/mengge/MEL_PIPseq/mm10_geneLength.txt
 #Intersecting PPS with gene ID#
 grep "NM_" mm10_wholegene.bed > mm10_wholegene_NM.bed
 intersectBed -a 0days_merged.CSAR_PPS_FDR05.bed -b /Data05/mengge/MEL_PIPseq/mm10_wholegene_NM.bed -s -wa -wb | cut -f1,2,3,4,5,6,10 > 0days_merged.CSAR_PPS_FDR05.geneName.bed
